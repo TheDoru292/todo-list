@@ -2,8 +2,61 @@
     <head>
         <meta charset="utf-8">
         <title>Todo List</title>
+        <link rel="stylesheet" href="style.css">
     </head>
     <body>
+        <div id="content">
+            <div class="header">
+                <h1>Todo</h1>
+            </div>
+            <div class="main">
+                <div class="sidebar">
+                    <div class="main-list">
+                        <ul>
+                            <li class="active">
+                                <img src="./images/inbox.svg" alt="">
+                                <p>Inbox</p>
+                            </li>
+                            <li>
+                                <img src="./images/calendar-today.svg" alt="">
+                                <p>Today</p>
+                            </li>
+                            <li>
+                                <img src="./images/calendar.svg" alt="">
+                                <p>Upcoming</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="projects-list">
+                        <h2>Projects</h2>
+                        <ul>
+                            <li>
+                                <img src="./images/plus.svg" alt="">
+                                <p>Add Project</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="main-content">
+                    <div class="todo">
+                        <h1 class="tab-title">Inbox</h1>
+                        <div class="todo-item">
+                            <img src="./images/circle.svg" alt="">
+                            <p class="todo-item-text">Complete the todo list project</p>
+                            <p>No date</p>
+                            <img class="todo-item-edit" src="./images/pencil.svg" alt="">
+                        </div>
+                        <div class="task-add">
+                            <img src="./images/plus.svg" alt="">
+                            <p>Add Task</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <p>Made with love by TheDoru</p>
+            </div>
+        </div>
         <script src="main.js"></script>
     </body>
 </html>

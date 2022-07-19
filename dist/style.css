@@ -1,0 +1,131 @@
+:root {
+    --header-height: 55px;
+    --footer-height: 40px;
+    --main-color: rgb(73, 73, 73);
+    --sidebar-width: 325px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-size: 18px;
+}
+
+#content {
+    display: flex;
+    flex-direction: column;
+}
+
+.header, .footer {
+    color: rgb(230, 230, 230);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    height: var(--header-height);
+    background-color: var(--main-color);
+}
+
+.header > h1 {
+    margin-left: 15px;
+}
+
+.main {
+    display: grid;
+    grid-template-columns: .23fr .77fr;
+    min-height: calc(100vh - (var(--header-height) + var(--footer-height)));
+    background-color: var(--secondary-color);
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: rgb(226, 226, 226);
+}
+
+.sidebar h2 {
+    margin-left: 15px;
+}
+
+.sidebar ul {
+    margin: 15px 15px 10px 15px;
+    list-style-type: none;
+}
+
+.sidebar li {
+    display: grid;
+    grid-template-columns: .09fr .9fr;
+    align-items: center;
+    padding-left: 10px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.sidebar li img {
+    width: 20px;
+}
+
+.active, .sidebar li:hover {
+    background-color: rgb(204, 204, 204);
+    border-radius: 5px;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: .25fr .5fr .25fr;
+    width: calc(100vw - var(--sidebar-width));
+}
+
+.todo {
+    grid-column: 2 / 3;
+}
+
+.tab-title {
+    padding-left: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    color:rgb(59, 59, 59);
+}
+
+.todo-item, .task-add {
+    display: grid;
+    grid-template-columns: 35px 1fr 70px 30px;
+    width: inherit;
+    height: 40px;
+    align-items: center;
+}
+
+.task-add {
+    grid-template-columns: 35px 1fr;
+}
+
+.todo-item:hover, .task-add:hover {
+    background-color: rgb(226, 226, 226);
+    border-radius: 5px;
+}
+
+.todo-item .todo-item-edit {
+    display: none;
+    width: 20px;
+}
+
+.todo-item img, .task-add img {
+    justify-self: center;
+    align-self: center;
+    width: 25px;
+}
+
+.todo-item-text, .task-add p { 
+    padding-left: 5px;
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: var(--footer-height);
+    background-color: var(--main-color);
+}
