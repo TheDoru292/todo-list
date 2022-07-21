@@ -92,7 +92,7 @@ body {
 
 .todo-item, .task-add {
     display: grid;
-    grid-template-columns: 35px 1fr 70px 30px;
+    grid-template-columns: 35px 1fr 85px 30px;
     width: inherit;
     height: 40px;
     align-items: center;
@@ -112,13 +112,17 @@ body {
     width: 20px;
 }
 
+.todo-item-edit:hover, .todo-item-checkmark {
+    cursor: pointer;
+}
+
 .todo-item img, .task-add img {
     justify-self: center;
     align-self: center;
     width: 25px;
 }
 
-.todo-item-text, .task-add p { 
+.todo-item-title, .task-add p { 
     padding-left: 5px;
 }
 
