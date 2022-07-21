@@ -29,18 +29,26 @@ function addTodoToProject(project, todoItem) {
 
     if(isSpecial === true) {
         if(project.todoList === undefined) { 
-            noTodoListForSpecial(project, todoItem);
+            todoListForSpecial(project, todoItem);
+        } else {
+            todoListForSpecial(project, todoItem);
         }
     }
 }
 
-function noTodoListForSpecial(project, todoItem) {
+
+function todoListForSpecial(project, todoItem) {
     for(let i = 0; specialProjects.length > i; i++) {
         if(specialProjects[i].title === project.title) {
             let todoItemTitle = todoItem.title;
 
-            specialProjects[i].projects = {};
-            specialProjects[i].projects[`${todoItemTitle}`] = {todoItem};
+            if(specialProjects[i].todoList === undefined) {
+                specialProjects[i].todoList = {};
+            }
+
+            specialProjects[i]["todoList"][`${todoItem.title}`] = todoItem;
+
+            console.log(specialProjects[i]);
         }
     }
     localStorage.setItem('specialProjects', JSON.stringify(specialProjects));
@@ -67,5 +75,5 @@ export {
     Project,
     createSpecialProjects,
     addTodoToProject,
-    checkIfSpecial
+    checkIfSpecial,
 }

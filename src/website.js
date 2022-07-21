@@ -27,6 +27,8 @@ function firstTimeInitialization() {
     const upcoming = new Project('upcoming');
 
     const firstProject = new Todo('Complete the Todo List Project', 'The Odin Project Todo Project!', '07-25-2022', 5, '');
+    const secondProject = new Todo('Complete! the Todo List Project', 'The Odin Project Todo Project!', '07-25-2022', 5, '');
+
 
     createSpecialProjects(inbox, today, upcoming);
 
