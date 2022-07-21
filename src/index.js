@@ -1,1 +1,3 @@
-console.log("hello world");
+import initialize from './website.js';
+
+initialize();
