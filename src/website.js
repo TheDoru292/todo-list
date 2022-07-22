@@ -1,4 +1,4 @@
-import {Project, createSpecialProjects, addTodoToProject} from './projects.js'
+import {Project, createProjects, addTodoToProject} from './projects.js'
 import Todo from './todo.js'
 import initialization from './dom.js'; 
 
@@ -30,7 +30,7 @@ function firstTimeInitialization() {
     const secondProject = new Todo('Complete! the Todo List Project', 'The Odin Project Todo Project!', '07-25-2022', 5, '');
 
 
-    createSpecialProjects(inbox, today, upcoming);
+    createProjects(inbox, today, upcoming);
 
     addTodoToProject(inbox, firstProject);
 }

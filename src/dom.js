@@ -1,4 +1,4 @@
-import { checkIfSpecial } from "./projects";
+import { deleteTodoItem } from "./projects";
 import CircleIcon from "../dist/images/circle.svg";
 import EditIcon from "../dist/images/pencil.svg";
 
@@ -9,15 +9,14 @@ export default function initialization() {
 function tab(project) {
     const todo = document.querySelector(".todo-list");
 
-    let value = checkIfSpecial(project);
-    let specialProjects = JSON.parse(localStorage.getItem('specialProjects'));
+    let projects = JSON.parse(localStorage.getItem('projects'));
 
-    for(let i = 0; specialProjects.length > i; i++) {
-        if(specialProjects[i].title === project) {
-            for(const prop in specialProjects[i].todoList) {
-                let obj = specialProjects[i].todoList[prop];
+    for(let i = 0; projects.length > i; i++) {
+        if(projects[i].title === project) {
+            for(const prop in projects[i].todoList) {
+                let obj = projects[i].todoList[prop];
 
-                let element = DOMcreateTodoItem(obj);
+                let element = DOMcreateTodoItem(obj, project);
 
                 todo.append(element);
             }
@@ -25,7 +24,7 @@ function tab(project) {
     }
 }
 
-function DOMcreateTodoItem(obj) {
+function DOMcreateTodoItem(obj, project) {
     const todoItem = document.createElement("div");
     todoItem.className = "todo-item";
     todoItem.dataset.name = obj.title;
@@ -44,6 +43,11 @@ function DOMcreateTodoItem(obj) {
     const todoEdit = new Image();
     todoEdit.className = "todo-item-edit";
     todoEdit.src = EditIcon;
+
+    circle.addEventListener("click", e => {
+        todoItem.remove();
+        deleteTodoItem(obj, project);
+    })
 
     todoItem.addEventListener("mouseover", e => {
         todoEdit.style.display = 'block';
