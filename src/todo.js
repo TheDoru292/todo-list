@@ -1,7 +1,7 @@
 let todoList = [];
 
 export default class Todo {
-    constructor(title, description, dueDate, priority, notes) {
+    constructor(title, description, dueDate = "No Due Date", priority = 5, notes) {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
