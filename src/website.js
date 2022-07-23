@@ -1,5 +1,5 @@
 import {Project, createProjects, addTodoToProject} from './projects.js'
-import Todo from './todo.js'
+import {Todo} from './todo.js'
 import initialization from './dom.js'; 
 
 export default function initialize() {
@@ -27,8 +27,6 @@ function firstTimeInitialization() {
     const upcoming = new Project('upcoming');
 
     const firstProject = new Todo('Complete the Todo List Project', 'The Odin Project Todo Project!', '07-25-2022', 5, '');
-    const secondProject = new Todo('Complete! the Todo List Project', 'The Odin Project Todo Project!', '07-25-2022', 5, '');
-
 
     createProjects(inbox, today, upcoming);
 

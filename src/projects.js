@@ -23,6 +23,18 @@ function createProjects(...args) {
     localStorage.setItem('projects', JSON.stringify(projects));
 }
 
+function searchForProject(project, todoItem) {
+    let localProjects = getLocalStorageProjects();
+
+    for(let i = 0; localProjects.length > i; i++) {
+        if(localProjects[i].title === project) {
+            let project = localProjects[i];
+
+            addTodoToProject(project, todoItem);
+        }
+    }
+}
+
 function addTodoToProject(project, todoItem) {
     if(project.todoList === undefined) { 
         todoList(project, todoItem);
@@ -33,18 +45,19 @@ function addTodoToProject(project, todoItem) {
 
 
 function todoList(project, todoItem) {
-    for(let i = 0; projects.length > i; i++) {
-        if(projects[i].title === project.title) {
-            if(projects[i].todoList === undefined) {
-                projects[i].todoList = {};
+    let localProjects = getLocalStorageProjects();
+
+    for(let i = 0; localProjects.length > i; i++) {
+        if(localProjects[i].title === project.title) {
+            if(localProjects[i].todoList === undefined) {
+                localProjects[i].todoList = {};
             }
 
-            projects[i]["todoList"][`${todoItem.title}`] = todoItem;
+            localProjects[i]["todoList"][`${todoItem.title}`] = todoItem;
 
-            console.log(projects);
         }
     }
-    localStorage.setItem('projects', JSON.stringify(projects));
+    localStorage.setItem('projects', JSON.stringify(localProjects));
 }
 
 function deleteTodoItem(obj, project) {
@@ -56,8 +69,6 @@ function deleteTodoItem(obj, project) {
             delete localProjects[i]["todoList"][`${obj.title}`];
 
             localStorage.setItem('projects', JSON.stringify(localProjects));
-
-            console.log(getLocalStorageProjects());
         }
     }
 }
@@ -67,11 +78,12 @@ function getLocalStorageProjects() {
 }
 
 // get items from Local Storage
-//     let consoleRead = JSON.parse(localStorage.getItem('specialProjects'));
+//     let consoleRead = JSON.parse(localStorage.getItem('projects'));
 
 export {
     Project,
     createProjects,
     addTodoToProject,
-    deleteTodoItem
+    deleteTodoItem,
+    searchForProject
 }

@@ -1,18 +1,27 @@
 import { deleteTodoItem } from "./projects";
 import CircleIcon from "../dist/images/circle.svg";
 import EditIcon from "../dist/images/pencil.svg";
+import { createTodo } from "./todo.js";
 
 export default function initialization() {
     tab("inbox");
+    addTask();
 }
 
 function tab(project) {
     const todo = document.querySelector(".todo-list");
+    todo.textContent = '';
+
+    const todoTitle = document.createElement('h1');
+    todoTitle.className = "tab-title";
 
     let projects = JSON.parse(localStorage.getItem('projects'));
 
     for(let i = 0; projects.length > i; i++) {
         if(projects[i].title === project) {
+            todoTitle.textContent = projects[i].title;
+            todo.append(todoTitle);
+
             for(const prop in projects[i].todoList) {
                 let obj = projects[i].todoList[prop];
 
@@ -75,6 +84,51 @@ function addTask() {
     const addTaskBtn = document.querySelector(".task-add");
 
     addTaskBtn.addEventListener("click", e => {
+        let projectName = activeClass.dataset.name;
 
+        createTaskInput(addTaskBtn, projectName);
+    });
+}
+
+function createTaskInput(btn, project) {
+    const mainContent = document.querySelector(".todo");
+
+    const newTodoItemDiv  = document.createElement("div");
+    newTodoItemDiv.className = "task-add-input";
+
+    const newTodoItemName = document.createElement("input");
+    newTodoItemName.className = "task-add-title";
+
+    const cancelBtn = document.createElement("button");
+    cancelBtn.className = 'task-add-cancel';
+    cancelBtn.textContent = "Cancel";
+
+    const submitBtn = document.createElement("button");
+    submitBtn.className = 'task-add-submit';
+    submitBtn.textContent = "Submit";
+
+    btn.style.display = "none";
+
+    newTodoItemDiv.append(newTodoItemName, submitBtn, cancelBtn);
+    mainContent.append(newTodoItemDiv);
+
+    addEventsToTaskInput(submitBtn, cancelBtn, newTodoItemName, newTodoItemDiv, project)
+
+    return newTodoItemName;
+}
+
+function addEventsToTaskInput(submit, cancel, title, div, project) {
+    const addTaskButton = document.querySelector(".task-add");
+
+    submit.addEventListener("click", e => {        
+        createTodo(title.value, project);
+        tab(project);
+        addTaskButton.style.display = "grid";
+        div.remove();
+    });
+
+    cancel.addEventListener("click", e => {
+        addTaskButton.style.display = "grid";
+        div.remove();
     });
 }

@@ -1,7 +1,9 @@
+import {searchForProject} from './projects.js';
+
 let todoList = [];
 
-export default class Todo {
-    constructor(title, description, dueDate = "No Due Date", priority = 5, notes) {
+class Todo {
+    constructor(title, description = "", dueDate = "No Due Date", priority = 5, notes = "") {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
@@ -28,4 +30,15 @@ Todo.prototype.changePriority = function(newPriority) {
 
 Todo.prototype.changeNotes = function(newNotes) {
     this.notes = newNotes;
+}
+
+function createTodo(title, project) {
+    const newTodo = new Todo(title);
+
+    searchForProject(project, newTodo);
+}
+
+export {
+    Todo,
+    createTodo
 }
