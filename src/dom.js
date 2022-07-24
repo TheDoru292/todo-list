@@ -1,7 +1,7 @@
-import { deleteTodoItem } from "./projects";
+import { deleteTodoItem, searchForProject, searchForTodoInProject } from "./projects";
 import CircleIcon from "../dist/images/circle.svg";
 import EditIcon from "../dist/images/pencil.svg";
-import { createTodo } from "./todo.js";
+import { createTodo, editTodo } from "./todo.js";
 
 export default function initialization() {
     tab("inbox");
@@ -16,7 +16,7 @@ function tab(project) {
     todoTitle.className = "tab-title";
 
     let projects = JSON.parse(localStorage.getItem('projects'));
-
+    
     for(let i = 0; projects.length > i; i++) {
         if(projects[i].title === project) {
             todoTitle.textContent = projects[i].title;
@@ -34,9 +34,12 @@ function tab(project) {
 }
 
 function DOMcreateTodoItem(obj, project) {
+    const todoItemContainer = document.createElement("div");
+    todoItemContainer.className = "todo-item-container";
+    todoItemContainer.dataset.name = obj.title;
+
     const todoItem = document.createElement("div");
     todoItem.className = "todo-item";
-    todoItem.dataset.name = obj.title;
 
     const circle = new Image();
     circle.src = CircleIcon;
@@ -66,9 +69,88 @@ function DOMcreateTodoItem(obj, project) {
         todoEdit.style.display = 'none';
     });
 
-    todoItem.append(circle, todoTitle, todoDate, todoEdit);
+    todoTitle.addEventListener("click", e => {
+        DOMeditTodoItem(obj, todoItemContainer, todoItem, todoEdit);
+    });
 
-    return todoItem;
+    todoEdit.addEventListener("click", e => {
+        DOMeditTodoItem(obj, todoItemContainer, todoItem, todoEdit);
+    })
+
+    todoItem.append(circle, todoTitle, todoDate, todoEdit);
+    todoItemContainer.append(todoItem);
+
+    return todoItemContainer;
+}
+
+function DOMeditTodoItem(obj, container, todoItemContainer, todoEdit) {
+    if(container.classList.contains("active-todo-item") === true) {
+        let editContainer = document.querySelector(".edit-container");
+        editContainer.remove();
+        container.classList.toggle("active-todo-item");
+        todoItemContainer.classList.toggle("edit-container-active");
+    } else {
+        todoItemContainer.classList.add("edit-container-active");
+        todoEdit.style.display = "block";
+
+        let projectName = getProjectName();
+        let project = searchForProject(projectName);
+    
+        let editContainer = document.createElement("div");
+        editContainer.className = "edit-container";
+
+        let editTitleLabel = document.createElement("label");
+        editTitleLabel.className = "edit-title-label";
+        editTitleLabel.setAttribute("for", "edit-title");
+        editTitleLabel.textContent = "Title:"
+
+        let editTitle = document.createElement("input");
+        editTitle.setAttribute("id", "edit-title");
+        editTitle.value = obj.title;
+
+        let editDateLabel = document.createElement("label");
+        editDateLabel.textContent = "Due Date:"
+        editDateLabel.setAttribute("for", "edit-date");
+
+        let editDate = document.createElement("input");
+        editDate.setAttribute("id", "edit-date");
+        editDate.setAttribute("type", "date");
+
+        let editPriorityLabel = document.createElement("label");
+        editPriorityLabel.className = "edit-priority-label";
+        editPriorityLabel.setAttribute("for", "edit-priority");
+        editPriorityLabel.textContent = "Priority:";
+
+        let editPriority = document.createElement("input");
+        editPriority.setAttribute("id", "edit-priority")
+        editPriority.setAttribute("type", "number");
+        editPriority.setAttribute("max", 5);
+        editPriority.setAttribute("min", 1);
+        editPriority.value = obj.priority;
+        
+        let editDescriptionLabel = document.createElement("label");
+        editDescriptionLabel.setAttribute("for", "edit-description");
+        editDescriptionLabel.textContent = "Description:";
+
+        let editDescription = document.createElement("textarea");
+        editDescription.setAttribute("id", "edit-description");
+        editDescription.value = obj.description;
+        editDescription.placeholder = "abcd your description comes here I think";
+
+        let saveButton = document.createElement("button");
+        saveButton.className = "edit-save";
+        saveButton.textContent = "Save";
+
+        saveButton.addEventListener("click", e => {
+            let projectName = getProjectName();
+            editTodo(obj, editTitle.value, editDescription.value, editDate.value, editPriority.value, projectName);
+            tab(projectName);
+        });
+
+        editContainer.append(editTitleLabel, editTitle, editPriorityLabel, editPriority, editDescriptionLabel, editDescription, editDateLabel, editDate, saveButton);
+        container.append(editContainer);
+        container.classList.add("active-todo-item");
+    }
 }
 
 function eventListeners() {
@@ -80,11 +162,10 @@ function addProject() {
 }
 
 function addTask() {
-    const activeClass = document.querySelector(".active");
     const addTaskBtn = document.querySelector(".task-add");
 
     addTaskBtn.addEventListener("click", e => {
-        let projectName = activeClass.dataset.name;
+        let projectName = getProjectName();
 
         createTaskInput(addTaskBtn, projectName);
     });
@@ -131,4 +212,11 @@ function addEventsToTaskInput(submit, cancel, title, div, project) {
         addTaskButton.style.display = "grid";
         div.remove();
     });
+}
+
+function getProjectName() {
+    const activeClass = document.querySelector(".active");
+    let projectName = activeClass.dataset.name;
+
+    return projectName;
 }

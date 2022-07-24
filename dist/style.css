@@ -157,6 +157,69 @@ body {
     background-color: rgb(189, 79, 79);
 }
 
+.edit-container {
+    padding: 10px;
+    width: inherit;
+    background-color: rgb(219, 219, 219);
+    display: grid;
+    gap: 10px;
+    grid-template-columns: .2fr 1fr .1fr .6fr;
+    grid-template-areas:
+        "edit-title-label edit-title edit-priority-label edit-priority"
+        "edit-description-label edit-description edit-date-label edit-date "
+        "edit-save edit-save edit-save edit-save";
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.edit-container-active, .edit-container-active:hover {
+    background-color: rgb(226, 226, 226);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.edit-container textarea {
+    resize: none;
+}
+
+#edit-title, #edit-date {
+    height: 30px;
+}
+
+.edit-title-label {
+    grid-area: "edit-title-label";
+}
+
+#edit-title {
+    grid-area: "edit-title";
+}
+
+#edit-date {
+    grid-area: "edit-date";
+}
+
+.edit-priority-label {
+    grid-area: "edit-priority-label";
+}
+
+#edit-priority {
+    width: 40px;
+    height: 30px;
+    grid-area: "edit-priority";
+}
+
+#edit-description {
+    grid-area: "edit-description";
+}
+
+.edit-save {
+    grid-area: "edit-save";
+    grid-column: 1 / 5;
+    height: 40px;
+    width: 80px;
+    justify-self: center;
+}
+
 .footer {
     display: flex;
     justify-content: center;

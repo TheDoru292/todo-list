@@ -23,19 +23,30 @@ function createProjects(...args) {
     localStorage.setItem('projects', JSON.stringify(projects));
 }
 
-function searchForProject(project, todoItem) {
+function searchForProject(project) {
     let localProjects = getLocalStorageProjects();
 
     for(let i = 0; localProjects.length > i; i++) {
         if(localProjects[i].title === project) {
             let project = localProjects[i];
-
-            addTodoToProject(project, todoItem);
+            return project;
         }
     }
 }
 
-function addTodoToProject(project, todoItem) {
+function searchForTodoInProject(project, todoItem) {
+    let result = project.todoList[`${todoItem}`];
+
+    if(result === "undefined") {
+        return "Oopsies";
+    } else {
+        return result;
+    }
+}
+
+function addTodoToProject(projectName, todoItem) {
+    let project = searchForProject(projectName);
+
     if(project.todoList === undefined) { 
         todoList(project, todoItem);
     } else {
@@ -85,5 +96,7 @@ export {
     createProjects,
     addTodoToProject,
     deleteTodoItem,
-    searchForProject
+    searchForProject,
+    searchForTodoInProject,
+    getLocalStorageProjects
 }
