@@ -151,6 +151,26 @@ function DOMeditTodoItem(obj, container, todoItemContainer, todoEdit) {
         container.append(editContainer);
         container.classList.add("active-todo-item");
     }
+
+    const todoList = document.querySelector(".todo-list");
+    let todoListChildren = todoList.children;
+
+    for(let i = 0; todoListChildren.length > i; i++) {
+        if(todoListChildren[i].classList.contains("active-todo-item")) {
+            if(todoListChildren[i].dataset.name === obj.title) {
+                console.log("JEST THE LEST YOU MEST FUCK THE REST")
+            } else {
+                let children = todoListChildren[i].children;
+                for(let j = 0; children.length > j; j++) {
+                    if(children[j].classList.contains("edit-container")) {
+                        children[j].remove();
+                        todoListChildren[i].classList.toggle("active-todo-item");
+                        todoListChildren[i].children[0].classList.toggle("edit-container-active");
+                    }
+                }
+            }
+        }
+    }
 }
 
 function eventListeners() {
