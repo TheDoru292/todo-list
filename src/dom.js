@@ -22,7 +22,6 @@ function tab(project) {
     let projects = JSON.parse(localStorage.getItem('projects'));
 
     for(let i = 0; projects.length > i; i++) {
-        console.log(projects[i]);
         if(projects[i].title === project) {
             todoTitle.textContent = projects[i].title;
             todo.append(todoTitle);
@@ -83,6 +82,10 @@ function createProjectItem(projectObj) {
     projectDelete.addEventListener("click", e => {
         projectContainer.remove();
         deleteProject(projectObj.title);
+        
+        let index = document.querySelector('[data-name="inbox"]');
+        tab("inbox");
+        activeClass(index);
     });
 
     projectContainer.append(projectIcon, projectTitle, projectDelete);

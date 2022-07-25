@@ -11,15 +11,38 @@ Project.prototype.changeTitle = function(newTitle) {
 }
 
 function createProject(projectName) {
-    let projects = getLocalStorageProjects();
+    let value = checkIfAvailable(projectName);
 
-    let value = {
-        "title": projectName,
+    if(value === true) {
+        alert("Project names must be different");
+    } else if(value === "blank") {
+        alert("Project names must not be blank");
+    } else {
+        let localProjects = getLocalStorageProjects();
+
+        let project = {
+            "title": projectName,
+        }
+    
+        localProjects.push(project);
+        localStorage.setItem('projects', JSON.stringify(localProjects));
+    }
+}
+
+function checkIfAvailable(projectName) {
+    let localStorage = getLocalStorageProjects();
+
+    if(projectName === '') {
+        return "blank";
     }
 
-    projects.push(value);
+    for(let i = 0; localStorage.length > i; i++) {
+        console.log[localStorage[i].title];
 
-    localStorage.setItem('projects', JSON.stringify(projects))
+        if(localStorage[i].title === projectName) {
+            return true;
+        }
+    }
 }
 
 function createProjects(...args) {    
