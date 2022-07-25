@@ -289,7 +289,10 @@ function createProjectInput(addBtn) {
 
 function projectEvents(title, div, submit, cancel, button) {
     submit.addEventListener("click", e => {
-        createProject(title.value);
+        let project = createProject(title.value);
+        createProjectItem(project);
+        div.remove();
+        button.style.display = "grid";
     });
 
     cancel.addEventListener("click", e => {

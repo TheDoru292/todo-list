@@ -29,6 +29,8 @@ function createProject(projectName) {
     
         localProjects.push(project);
         localStorage.setItem('projects', JSON.stringify(localProjects));
+
+        return project;
     }
 }
 
