@@ -64,6 +64,10 @@ body {
     cursor: pointer;
 }
 
+.sidebar .project {
+    grid-template-columns: .09fr .9fr .09fr;
+}
+
 .sidebar li img {
     width: 20px;
 }
@@ -126,34 +130,35 @@ body {
     padding-left: 5px;
 }
 
-.task-add-input {
+.task-add-input, .project-add-div {
     display: grid;
     grid-template-columns: .5fr .5fr;
     grid-template-rows: .5fr .5fr;
     height: 60px;
 }
 
-.task-add-title {
+.task-add-title, .project-add-title {
     grid-column: 1 / 3;
 }
 
-.task-add-submit, .task-add-cancel {
+.task-add-submit, .task-add-cancel,
+.project-add-cancel, .project-add-submit {
     border: 0.5px solid black;
 }
 
-.task-add-submit {
+.task-add-submit, .project-add-submit {
     background-color: rgb(139, 255, 110);
 }
 
-.task-add-submit:hover {
+.task-add-submit:hover, .project-add-submit:hover {
     background-color: rgb(104, 194, 82);
 }
 
-.task-add-cancel {
+.task-add-cancel, .project-add-cancel {
     background-color: rgb(255, 106, 106);
 }
 
-.task-add-cancel:hover {
+.task-add-cancel:hover, .project-add-cancel:hover {
     background-color: rgb(189, 79, 79);
 }
 
