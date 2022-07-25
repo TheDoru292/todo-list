@@ -1,4 +1,5 @@
 import {addTodoToProject, getLocalStorageProjects} from './projects.js';
+import {createTaskInput} from './dom.js';
 
 let todoList = [];
 
@@ -66,9 +67,37 @@ function checkIfEmpty(title, dueDate, priority) {
 }
 
 function createTodo(title, project) {
-    const newTodo = new Todo(title);
+    let value = checkIfAvailable(title, project);
 
-    addTodoToProject(project, newTodo);
+    if(value === false) {
+        alert("Todo item must be different");
+        createTaskInput(project);
+    } else if(value === "blank") {
+        alert("Todo item must not be blank");
+        createTaskInput(project);
+    } else {
+        const newTodo = new Todo(title);
+
+        addTodoToProject(project, newTodo);
+    }
+}
+
+function checkIfAvailable(todo, project) {
+    let localStorage = getLocalStorageProjects();
+
+    if(todo === '') {
+        return "blank";
+    }
+
+    for(let i = 0; localStorage.length > i; i++) {
+        if(localStorage[i].title === project) {
+            for(let prop in localStorage[i]["todoList"]) {
+                if(prop === todo) {
+                    return false;
+                }
+            }
+        }
+    }
 }
 
 export {

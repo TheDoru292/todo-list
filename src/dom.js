@@ -304,12 +304,13 @@ function addTask() {
     addTaskBtn.addEventListener("click", e => {
         let projectName = getProjectName();
 
-        createTaskInput(addTaskBtn, projectName);
+        createTaskInput(addTaskBtn);
     });
 }
 
-function createTaskInput(btn, project) {
+function createTaskInput() {
     const mainContent = document.querySelector(".todo");
+    const addTaskBtn = document.querySelector(".task-add");
 
     const newTodoItemDiv  = document.createElement("div");
     newTodoItemDiv.className = "task-add-input";
@@ -325,18 +326,19 @@ function createTaskInput(btn, project) {
     submitBtn.className = 'task-add-submit';
     submitBtn.textContent = "Submit";
 
-    btn.style.display = "none";
+    addTaskBtn.style.display = "none";
 
     newTodoItemDiv.append(newTodoItemName, submitBtn, cancelBtn);
     mainContent.append(newTodoItemDiv);
 
-    addEventsToTaskInput(submitBtn, cancelBtn, newTodoItemName, newTodoItemDiv, project)
+    addEventsToTaskInput(submitBtn, cancelBtn, newTodoItemName, newTodoItemDiv)
 
     return newTodoItemName;
 }
 
-function addEventsToTaskInput(submit, cancel, title, div, project) {
+function addEventsToTaskInput(submit, cancel, title, div) {
     const addTaskButton = document.querySelector(".task-add");
+    const project = getProjectName();
 
     submit.addEventListener("click", e => {        
         createTodo(title.value, project);
@@ -356,4 +358,8 @@ function getProjectName() {
     let projectName = activeClass.dataset.name;
 
     return projectName;
+}
+
+export {
+    createTaskInput
 }
