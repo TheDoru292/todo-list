@@ -23,15 +23,6 @@ function tab(project) {
 
     for(let i = 0; projects.length > i; i++) {
         if(projects[i].title === project) {
-            if(project === "today") {
-                setTodayProjectItems();
-            }
-        
-            if(project === "upcoming") {
-                console.log('run');
-                setUpcomingProjectItems();
-            }
-
             todoTitle.textContent = projects[i].title;
             todo.append(todoTitle);
 
@@ -281,6 +272,13 @@ function addMenuEvents() {
 
     mainList.forEach(item => {
         item.addEventListener("click", e => {
+            if(item.dataset.name === "today") {
+                setTodayProjectItems();
+            }
+        
+            if(item.dataset.name === "upcoming") {
+                setUpcomingProjectItems();
+            }
             activeClass(item);
             tab(item.dataset.name);
         })
