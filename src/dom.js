@@ -1,4 +1,4 @@
-import { createProject, deleteTodoItem, getLocalStorageProjects, searchForProject, deleteProject } from "./projects";
+import { createProject, deleteTodoItem, getLocalStorageProjects, searchForProject, deleteProject, setUpcomingProjectItems, setTodayProjectItems } from "./projects";
 import CircleIcon from "../dist/images/circle.svg";
 import EditIcon from "../dist/images/pencil.svg";
 import listIcon from "../dist/images/format-list-bulleted.svg";
@@ -23,6 +23,15 @@ function tab(project) {
 
     for(let i = 0; projects.length > i; i++) {
         if(projects[i].title === project) {
+            if(project === "today") {
+                setTodayProjectItems();
+            }
+        
+            if(project === "upcoming") {
+                console.log('run');
+                setUpcomingProjectItems();
+            }
+
             todoTitle.textContent = projects[i].title;
             todo.append(todoTitle);
 

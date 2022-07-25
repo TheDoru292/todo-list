@@ -58,6 +58,37 @@ function setTodayProjectItems() {
     }
 }
 
+function setUpcomingProjectItems() {
+    let value = getLocalStorageProjects();
+    let date = format(new Date(), 'yyyy-MM-dd');
+    let endOfWeekDate = format(endOfWeek(parseISO(date)), 'yyyy-MM-dd');
+
+    let dateDay = date.split("-");
+    let endOfWeekDayDate = endOfWeekDate.split("-");
+
+    for(let i = 0; value.length > i; i++) {
+        let something = value[i]["todoList"];
+
+        if(value[i].title === "today") {
+
+        } else {
+            for(let prop in something) {
+                let item = something[prop];
+
+                for(let j = dateDay[2]; endOfWeekDayDate[2] >= j; j++) {
+                    let date = `${dateDay[0]}-${dateDay[1]}-${j}`
+
+                    if(item.dueDate === date) {
+                        value[2]["todoList"][`${item.title}`] = item;
+                    }
+
+                    localStorage.setItem('projects', JSON.stringify(value));
+                }
+            }
+        }
+    }
+}
+
 function checkIfAvailable(projectName) {
     let localStorage = getLocalStorageProjects();
 
