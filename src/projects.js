@@ -22,6 +22,9 @@ function createProject(projectName) {
 
         let project = {
             "title": projectName,
+            "todoList": {
+
+            }
         }
     
         localProjects.push(project);
@@ -51,6 +54,9 @@ function createProjects(...args) {
         
         let value = {
             "title": title,
+            "todoList": {
+
+            }
         }
 
         projects.push(value);
@@ -95,9 +101,6 @@ function todoList(project, todoItem) {
 
     for(let i = 0; localProjects.length > i; i++) {
         if(localProjects[i].title === project.title) {
-            if(localProjects[i].todoList === undefined) {
-                localProjects[i].todoList = {};
-            }
 
             localProjects[i]["todoList"][`${todoItem.title}`] = todoItem;
 
