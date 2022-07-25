@@ -10,6 +10,18 @@ Project.prototype.changeTitle = function(newTitle) {
     this.title = newTitle;
 }
 
+function createProject(projectName) {
+    let projects = getLocalStorageProjects();
+
+    let value = {
+        "title": projectName,
+    }
+
+    projects.push(value);
+
+    localStorage.setItem('projects', JSON.stringify(projects))
+}
+
 function createProjects(...args) {    
     for(let i = 0; args.length > i; i++) {
         let title = args[i].title;
@@ -84,6 +96,20 @@ function deleteTodoItem(obj, project) {
     }
 }
 
+function deleteProject(project) {
+    let localProjects = getLocalStorageProjects();
+
+    for(let i = 0; localProjects.length > i; i++) {
+        if(localProjects[i].title === project) {
+            delete localProjects[i];
+
+            let filteredProjects = localProjects.filter(item => item);
+
+            localStorage.setItem('projects', JSON.stringify(filteredProjects));
+        }
+    }
+}
+
 function getLocalStorageProjects() {
     return JSON.parse(localStorage.getItem('projects'));
 }
@@ -94,9 +120,11 @@ function getLocalStorageProjects() {
 export {
     Project,
     createProjects,
+    createProject,
     addTodoToProject,
     deleteTodoItem,
     searchForProject,
     searchForTodoInProject,
-    getLocalStorageProjects
+    getLocalStorageProjects,
+    deleteProject
 }

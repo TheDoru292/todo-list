@@ -1,11 +1,15 @@
-import { deleteTodoItem, searchForProject, searchForTodoInProject } from "./projects";
+import { createProject, deleteTodoItem, getLocalStorageProjects, searchForProject, deleteProject } from "./projects";
 import CircleIcon from "../dist/images/circle.svg";
 import EditIcon from "../dist/images/pencil.svg";
+import listIcon from "../dist/images/format-list-bulleted.svg";
+import deleteIcon from "../dist/images/close.svg"
 import { createTodo, editTodo } from "./todo.js";
 
 export default function initialization() {
     tab("inbox");
+    addProjectsToList();
     addTask();
+    eventListeners();
 }
 
 function tab(project) {
@@ -16,8 +20,9 @@ function tab(project) {
     todoTitle.className = "tab-title";
 
     let projects = JSON.parse(localStorage.getItem('projects'));
-    
+
     for(let i = 0; projects.length > i; i++) {
+        console.log(projects[i]);
         if(projects[i].title === project) {
             todoTitle.textContent = projects[i].title;
             todo.append(todoTitle);
@@ -31,6 +36,75 @@ function tab(project) {
             }
         }
     }
+}
+
+function addProjectsToList() {
+    let projects = getLocalStorageProjects();
+
+    for(let i = 0; projects.length > i; i++) {
+        if(projects[i].title === "inbox" || projects[i].title === "today" || projects[i].title === "upcoming") {
+            console.log("wut");
+        } else {
+            createProjectItem(projects[i]);
+        }
+    }
+}
+
+function createProjectItem(projectObj) {
+    const mainProjectContainer = document.querySelector(".project-list");
+    const projectContainer = document.createElement("li");
+    projectContainer.className = "project";
+    projectContainer.dataset.name = projectObj.title;
+
+    const projectIcon = new Image();
+    projectIcon.src = listIcon;
+
+    const projectTitle = document.createElement("p");
+    projectTitle.textContent = projectObj.title;
+
+    const projectDelete = new Image();
+    projectDelete.style.display = "none";
+    projectDelete.src = deleteIcon;
+
+    projectTitle.addEventListener("click", e => {
+        activeClass(projectContainer);
+        
+        tab(projectObj.title);
+    });
+
+    projectContainer.addEventListener("mouseover", e => {
+        projectDelete.style.display = "block";
+    });
+
+    projectContainer.addEventListener("mouseout", e => {
+        projectDelete.style.display = "none";
+    });
+
+    projectDelete.addEventListener("click", e => {
+        projectContainer.remove();
+        deleteProject(projectObj.title);
+    });
+
+    projectContainer.append(projectIcon, projectTitle, projectDelete);
+    mainProjectContainer.append(projectContainer);
+}
+
+function activeClass(element) {
+    let list = document.querySelector(".sidebar").children;
+
+    for(let i = 0; list.length > i; i++) {
+        if(list[i].classList.contains("main-list") || list[i].classList.contains("project-list")) {
+            let liArray = list[i].children[0].children;
+
+            for(let j = 0; liArray.length > j; j++) {
+                if(liArray[j].classList.contains("active")) {
+                    liArray[j].classList.toggle("active");
+                }
+            }
+       }
+    }
+
+    element.classList.toggle("active");
 }
 
 function DOMcreateTodoItem(obj, project) {
@@ -174,11 +248,51 @@ function DOMeditTodoItem(obj, container, todoItemContainer, todoEdit) {
 }
 
 function eventListeners() {
-
+    addProjectEvent();
 }
 
-function addProject() {
+function addProjectEvent() {
+    const addProjectBtn = document.querySelector(".add-project");
 
+    addProjectBtn.addEventListener("click", e => {
+        createProjectInput(addProjectBtn);
+    });
+}
+
+function createProjectInput(addBtn) {
+    const projectList = document.querySelector(".project-list");
+    
+    const newProjectDiv  = document.createElement("div");
+    newProjectDiv.className = "project-add-div";
+
+    const newProjectTitle = document.createElement("input");
+    newProjectTitle.className = "project-add-title";
+
+    const cancelBtn = document.createElement("button");
+    cancelBtn.className = 'project-add-cancel';
+    cancelBtn.textContent = "Cancel";
+
+    const submitBtn = document.createElement("button");
+    submitBtn.className = 'project-add-submit';
+    submitBtn.textContent = "Submit";
+
+    addBtn.style.display = "none";
+
+    projectEvents(newProjectTitle, newProjectDiv, submitBtn, cancelBtn, addBtn);
+
+    newProjectDiv.append(newProjectTitle, submitBtn, cancelBtn);
+    projectList.append(newProjectDiv);
+}
+
+function projectEvents(title, div, submit, cancel, button) {
+    submit.addEventListener("click", e => {
+        createProject(title.value);
+    });
+
+    cancel.addEventListener("click", e => {
+        button.style.display = "grid";
+        div.remove();
+    });
 }
 
 function addTask() {
