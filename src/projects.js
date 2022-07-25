@@ -1,3 +1,5 @@
+import {format, endOfWeek, parseISO} from 'date-fns';
+
 let projects = [];
 
 class Project {
@@ -31,6 +33,28 @@ function createProject(projectName) {
         localStorage.setItem('projects', JSON.stringify(localProjects));
 
         return project;
+    }
+}
+
+function setTodayProjectItems() {
+    let value = getLocalStorageProjects();
+    let today = format(new Date(), 'yyyy-MM-dd');
+
+    for(let i = 0; value.length > i; i++) {
+        let something = value[i]["todoList"];
+
+        for(let prop in something) {
+            let item = something[prop];
+
+            if(item.dueDate === today) {
+                for(let i = 0; value.length > i; i++) {
+                    if(value[i].title === "today") {
+                        value[i]["todoList"][`${item.title}`] = item;
+                    }
+                }
+                localStorage.setItem('projects', JSON.stringify(value));
+            }
+        }
     }
 }
 
@@ -154,5 +178,7 @@ export {
     searchForProject,
     searchForTodoInProject,
     getLocalStorageProjects,
-    deleteProject
+    deleteProject,
+    setTodayProjectItems,
+    setUpcomingProjectItems
 }

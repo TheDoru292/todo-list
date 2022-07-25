@@ -96,12 +96,23 @@ function activeClass(element) {
     let list = document.querySelector(".sidebar").children;
 
     for(let i = 0; list.length > i; i++) {
-        if(list[i].classList.contains("main-list") || list[i].classList.contains("project-list")) {
+        if(list[i].classList.contains("main-list")) {
             let liArray = list[i].children[0].children;
 
             for(let j = 0; liArray.length > j; j++) {
                 if(liArray[j].classList.contains("active")) {
                     liArray[j].classList.toggle("active");
+                    element.classList.Name = "active";
+                }
+            }
+       }
+       if(list[i].classList.contains("projects-list")) {
+            let liArray = list[i].children[1].children[0].children;
+
+            for(let j = 0; liArray.length > j; j++) {
+                if(liArray[j].classList.contains("active")) {
+                    liArray[j].classList.toggle("active");
+                    element.classList.Name = "active";
                 }
             }
        }
@@ -192,6 +203,7 @@ function DOMeditTodoItem(obj, container, todoItemContainer, todoEdit) {
         let editDate = document.createElement("input");
         editDate.setAttribute("id", "edit-date");
         editDate.setAttribute("type", "date");
+        editDate.value = obj.dueDate;
 
         let editPriorityLabel = document.createElement("label");
         editPriorityLabel.className = "edit-priority-label";
@@ -252,6 +264,18 @@ function DOMeditTodoItem(obj, container, todoItemContainer, todoEdit) {
 
 function eventListeners() {
     addProjectEvent();
+    addMenuEvents();
+}
+
+function addMenuEvents() {
+    const mainList = document.querySelectorAll(".main-list > ul > *");
+
+    mainList.forEach(item => {
+        item.addEventListener("click", e => {
+            activeClass(item);
+            tab(item.dataset.name);
+        })
+    })
 }
 
 function addProjectEvent() {

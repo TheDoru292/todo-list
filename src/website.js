@@ -1,10 +1,13 @@
-import {Project, createProjects, addTodoToProject} from './projects.js'
+import {Project, createProjects, addTodoToProject, setTodayProjectItems, setUpcomingProjectItems} from './projects.js';
+import { format } from 'date-fns'; 
 import {Todo} from './todo.js'
 import initialization from './dom.js'; 
 
 export default function initialize() {
     checkIfFirstTime();
     pageLoad();
+    setTodayProjectItems();
+    setUpcomingProjectItems();
 }
 
 function pageLoad() {
@@ -26,7 +29,9 @@ function firstTimeInitialization() {
     const today = new Project('today');
     const upcoming = new Project('upcoming');
 
-    const firstProject = new Todo('Complete the Todo List Project', 'The Odin Project Todo Project!', '2022-07-12', 5, '');
+    const date = format(new Date(2022, 6, 25), 'yyyy-MM-dd');
+
+    const firstProject = new Todo('Complete the Todo List Project', 'The Odin Project Todo Project!', date, 5, '');
 
     createProjects(inbox, today, upcoming);
 
