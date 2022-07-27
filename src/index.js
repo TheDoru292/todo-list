@@ -1,3 +1,3 @@
-import initialize from './website.js';
+import initialize from './website.js'
 
-initialize();
+initialize()

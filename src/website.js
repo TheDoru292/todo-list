@@ -1,39 +1,39 @@
-import {Project, createProjects, addTodoToProject, setTodayProjectItems, setUpcomingProjectItems} from './projects.js';
-import { format } from 'date-fns'; 
-import {Todo} from './todo.js'
-import initialization from './dom.js'; 
+import { Project, createProjects, addTodoToProject, setTodayProjectItems, setUpcomingProjectItems } from './projects.js'
+import { format } from 'date-fns'
+import { Todo } from './todo.js'
+import initialization from './dom.js'
 
-export default function initialize() {
-    checkIfFirstTime();
-    pageLoad();
-    setTodayProjectItems();
-    setUpcomingProjectItems();
+export default function initialize () {
+  checkIfFirstTime()
+  pageLoad()
+  setTodayProjectItems()
+  setUpcomingProjectItems()
 }
 
-function pageLoad() {
-    initialization();
+function pageLoad () {
+  initialization()
 }
 
-function checkIfFirstTime() {
-    let value = localStorage.getItem('firstTime');
+function checkIfFirstTime () {
+  const value = localStorage.getItem('firstTime')
 
-    if(value === null) {
-        localStorage.setItem('firstTime', 'false');
+  if (value === null) {
+    localStorage.setItem('firstTime', 'false')
 
-        firstTimeInitialization();
-    }
+    firstTimeInitialization()
+  }
 }
 
-function firstTimeInitialization() {
-    const inbox = new Project('inbox');
-    const today = new Project('today');
-    const upcoming = new Project('upcoming');
+function firstTimeInitialization () {
+  const inbox = new Project('inbox')
+  const today = new Project('today')
+  const upcoming = new Project('upcoming')
 
-    const date = format(new Date(), 'yyyy-MM-dd');
+  const date = format(new Date(), 'yyyy-MM-dd')
 
-    const firstProject = new Todo('Complete the Todo List Project', 'The Odin Project Todo Project!', date, 5, '');
+  const firstProject = new Todo('Complete the Todo List Project', 'The Odin Project Todo Project!', date, 5, '')
 
-    createProjects(inbox, today, upcoming);
+  createProjects(inbox, today, upcoming)
 
-    addTodoToProject(inbox.title, firstProject);
+  addTodoToProject(inbox.title, firstProject)
 }

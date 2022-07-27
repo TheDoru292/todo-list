@@ -1,249 +1,265 @@
-import {format, endOfWeek, parseISO} from 'date-fns';
+import { format, endOfWeek, parseISO } from 'date-fns'
 
-let projects = [];
+const projects = []
 
 class Project {
-    constructor(title) {
-        this.title = title;
+  constructor (title) {
+    this.title = title
+  }
+}
+
+Project.prototype.changeTitle = function (newTitle) {
+  this.title = newTitle
+}
+
+function createProject (projectName) {
+  const value = checkIfAvailable(projectName)
+
+  if (value === true) {
+    alert('Project names must be different')
+  } else if (value === 'blank') {
+    alert('Project names must not be blank')
+  } else {
+    const localProjects = getLocalStorageProjects()
+
+    const project = {
+      title: projectName,
+      todoList: {
+
+      }
     }
+
+    localProjects.push(project)
+    localStorage.setItem('projects', JSON.stringify(localProjects))
+
+    return project
+  }
 }
 
-Project.prototype.changeTitle = function(newTitle) {
-    this.title = newTitle;
+function setTodayProjectItems () {
+  const value = getLocalStorageProjects()
+  const today = format(new Date(), 'yyyy-MM-dd')
+
+  for (let i = 0; value.length > i; i++) {
+    const something = value[i].todoList
+
+    for (const prop in something) {
+      const item = something[prop]
+
+      if (!(value[i].title === 'today')) {
+        if (item.dueDate === today) {
+          value[1].todoList[`${item.title}`] = item
+
+          if (value[i].title !== 'today') {
+            value[i].todoList[`${item.title}`].todayProject = value[i].title
+          }
+        }
+        localStorage.setItem('projects', JSON.stringify(value))
+      }
+    }
+  }
 }
 
-function createProject(projectName) {
-    let value = checkIfAvailable(projectName);
+function setUpcomingProjectItems () {
+  const value = getLocalStorageProjects()
+  const date = format(new Date(), 'yyyy-MM-dd')
+  const endOfWeekDate = format(endOfWeek(parseISO(date)), 'yyyy-MM-dd')
 
-    if(value === true) {
-        alert("Project names must be different");
-    } else if(value === "blank") {
-        alert("Project names must not be blank");
-    } else {
-        let localProjects = getLocalStorageProjects();
+  const dateDay = date.split('-')
+  const endOfWeekDayDate = endOfWeekDate.split('-')
 
-        let project = {
-            "title": projectName,
-            "todoList": {
+  for (let i = 0; value.length > i; i++) {
+    const something = value[i].todoList
 
+    if (!(value[i].title === 'today')) {
+      for (const prop in something) {
+        const item = something[prop]
+
+        for (let j = dateDay[2]; endOfWeekDayDate[2] >= j; j++) {
+          const date = `${dateDay[0]}-${dateDay[1]}-${j}`
+
+          if (item.dueDate === date) {
+            value[2].todoList[`${item.title}`] = item
+
+            if (value[i].title !== 'upcoming') {
+              value[2].todoList[`${item.title}`].weeklyProject = value[i].title
             }
+          }
+
+          localStorage.setItem('projects', JSON.stringify(value))
         }
-    
-        localProjects.push(project);
-        localStorage.setItem('projects', JSON.stringify(localProjects));
-
-        return project;
+      }
     }
+  }
 }
 
-function setTodayProjectItems() {
-    let value = getLocalStorageProjects();
-    let today = format(new Date(), 'yyyy-MM-dd');
+function checkIfAvailable (projectName) {
+  const localStorage = getLocalStorageProjects()
 
-    for(let i = 0; value.length > i; i++) {
-        let something = value[i]["todoList"];
+  if (projectName === '') {
+    return 'blank'
+  }
 
-        for(let prop in something) {
-            let item = something[prop];
+  for (let i = 0; localStorage.length > i; i++) {
+    if (localStorage[i].title === projectName) {
+      return true
+    }
+  }
+}
 
-            if(item.dueDate === today) {
-                for(let i = 0; value.length > i; i++) {
-                    if(value[i].title === "today") {
-                        value[i]["todoList"][`${item.title}`] = item;
-                        value[i]["todoList"][`${item.title}`]["todayProject"] = value[i].title;
-                    }
-                }
-                localStorage.setItem('projects', JSON.stringify(value));
-            }
+function createProjects (...args) {
+  for (let i = 0; args.length > i; i++) {
+    const title = args[i].title
+
+    const value = {
+      title: title,
+      todoList: {
+
+      }
+    }
+
+    projects.push(value)
+  }
+  localStorage.setItem('projects', JSON.stringify(projects))
+}
+
+function searchForProject (project) {
+  const localProjects = getLocalStorageProjects()
+
+  for (let i = 0; localProjects.length > i; i++) {
+    if (localProjects[i].title === project) {
+      const project = localProjects[i]
+      return project
+    }
+  }
+}
+
+function searchForTodoInProject (project, todoItem) {
+  const result = project.todoList[`${todoItem}`]
+
+  if (result === 'undefined') {
+    return 'Oopsies'
+  } else {
+    return result
+  }
+}
+
+function addTodoToProject (projectName, todoItem) {
+  const project = searchForProject(projectName)
+
+  if (project.todoList === undefined) {
+    todoList(project, todoItem)
+  } else {
+    todoList(project, todoItem)
+  }
+}
+
+function todoList (project, todoItem) {
+  const localProjects = getLocalStorageProjects()
+
+  for (let i = 0; localProjects.length > i; i++) {
+    if (localProjects[i].title === project.title) {
+      localProjects[i].todoList[`${todoItem.title}`] = todoItem
+    }
+  }
+  localStorage.setItem('projects', JSON.stringify(localProjects))
+}
+
+function deleteTodoItem (obj, project, deleteFromSpecial = false) {
+  const localProjects = getLocalStorageProjects()
+
+  for (let i = 0; localProjects.length > i; i++) {
+    if (localProjects[i].title === project) {
+      const todayProject = localProjects[i].todoList[`${obj.title}`].todayProject
+      const weeklyProject = localProjects[i].todoList[`${obj.title}`].weeklyProject
+
+      let projectsLocal = getLocalStorageProjects()
+
+      if (deleteFromSpecial === false) {
+        if (todayProject !== undefined) {
+          projectsLocal = deleteFromSpecialProjects('today', obj.title, projectsLocal)
         }
-    }
-}
-
-function setUpcomingProjectItems() {
-    let value = getLocalStorageProjects();
-    let date = format(new Date(), 'yyyy-MM-dd');
-    let endOfWeekDate = format(endOfWeek(parseISO(date)), 'yyyy-MM-dd');
-
-    let dateDay = date.split("-");
-    let endOfWeekDayDate = endOfWeekDate.split("-");
-
-    for(let i = 0; value.length > i; i++) {
-        let something = value[i]["todoList"];
-
-        if(value[i].title === "today") {
-
-        } else {
-            for(let prop in something) {
-                let item = something[prop];
-
-                for(let j = dateDay[2]; endOfWeekDayDate[2] >= j; j++) {
-                    let date = `${dateDay[0]}-${dateDay[1]}-${j}`
-
-                    if(item.dueDate === date) {
-                        value[2]["todoList"][`${item.title}`] = item;
-                        value[2]["todoList"][`${item.title}`]["weeklyProject"] = value[i].title;
-                    }
-
-                    localStorage.setItem('projects', JSON.stringify(value));
-                }
-            }
+        if (weeklyProject !== undefined) {
+          projectsLocal = deleteFromSpecialProjects('upcoming', obj.title, projectsLocal)
         }
-    }
-}
-
-function checkIfAvailable(projectName) {
-    let localStorage = getLocalStorageProjects();
-
-    if(projectName === '') {
-        return "blank";
-    }
-
-    for(let i = 0; localStorage.length > i; i++) {
-        console.log[localStorage[i].title];
-
-        if(localStorage[i].title === projectName) {
-            return true;
+      } else {
+        if (todayProject !== undefined) {
+          console.log(todayProject)
+          projectsLocal = deleteBySpecial(obj.title, obj.todayProject, projectsLocal)
         }
-    }
-}
-
-function createProjects(...args) {    
-    for(let i = 0; args.length > i; i++) {
-        let title = args[i].title;
-        
-        let value = {
-            "title": title,
-            "todoList": {
-
-            }
+        if (weeklyProject !== undefined) {
+          console.log(weeklyProject)
+          projectsLocal = deleteBySpecial(obj.title, obj.weeklyProject, projectsLocal, true)
         }
+      }
 
-        projects.push(value);
+      delete projectsLocal[i].todoList[`${obj.title}`]
+
+      console.log(projectsLocal)
+
+      localStorage.setItem('projects', JSON.stringify(projectsLocal))
     }
-    localStorage.setItem('projects', JSON.stringify(projects));
+  }
 }
 
-function searchForProject(project) {
-    let localProjects = getLocalStorageProjects();
+function deleteBySpecial (obj, projectName, localProjects, whatever = false) {
+  for (let i = 0; localProjects.length > i; i++) {
+    if (localProjects[i].title === projectName) {
+      console.log(localProjects[i])
+      delete localProjects[i].todoList[obj]
 
-    for(let i = 0; localProjects.length > i; i++) {
-        if(localProjects[i].title === project) {
-            let project = localProjects[i];
-            return project;
+      return localProjects
+    }
+  }
+}
+
+function deleteFromSpecialProjects (project, obj, localProjects) {
+  for (let i = 0; localProjects.length > i; i++) {
+    if (localProjects[i].title === project) {
+      const todoList = localProjects[i].todoList
+
+      for (const prop in todoList) {
+        if (todoList[prop].title === obj) {
+          delete todoList[prop]
+
+          return localProjects
         }
+      }
     }
+  }
 }
 
-function searchForTodoInProject(project, todoItem) {
-    let result = project.todoList[`${todoItem}`];
+function deleteProject (project) {
+  const localProjects = getLocalStorageProjects()
 
-    if(result === "undefined") {
-        return "Oopsies";
-    } else {
-        return result;
+  for (let i = 0; localProjects.length > i; i++) {
+    if (localProjects[i].title === project) {
+      delete localProjects[i]
+
+      const filteredProjects = localProjects.filter(item => item)
+
+      localStorage.setItem('projects', JSON.stringify(filteredProjects))
     }
+  }
 }
 
-function addTodoToProject(projectName, todoItem) {
-    let project = searchForProject(projectName);
-
-    if(project.todoList === undefined) { 
-        todoList(project, todoItem);
-    } else {
-        todoList(project, todoItem);
-    }
-}
-
-
-function todoList(project, todoItem) {
-    let localProjects = getLocalStorageProjects();
-
-    for(let i = 0; localProjects.length > i; i++) {
-        if(localProjects[i].title === project.title) {
-
-            localProjects[i]["todoList"][`${todoItem.title}`] = todoItem;
-
-        }
-    }
-    localStorage.setItem('projects', JSON.stringify(localProjects));
-}
-
-function deleteTodoItem(obj, project) {
-
-    let localProjects = getLocalStorageProjects();
-
-    for(let i = 0; localProjects.length > i; i++) {
-        if(localProjects[i].title === project) {
-            let todayProject = localProjects[i]["todoList"][`${obj.title}`]["todayProject"];
-            let weeklyProject = localProjects[i]["todoList"][`${obj.title}`]["weeklyProject"];
-
-            let projectsLocal = getLocalStorageProjects();
-
-            if(todayProject !== undefined) {
-                projectsLocal = deleteFromSpecialProjects("today", obj.title, projectsLocal);
-            }
-            if(weeklyProject !== undefined) {
-                projectsLocal = deleteFromSpecialProjects("upcoming", obj.title, projectsLocal);
-            }
-
-            delete projectsLocal[i]["todoList"][`${obj.title}`];
-
-            console.log(projectsLocal);
-
-            localStorage.setItem('projects', JSON.stringify(projectsLocal));
-        }
-    }
-}
-
-function deleteFromSpecialProjects(project, obj, localProjects) {
-
-    for(let i = 0; localProjects.length > i; i++) {
-        if(localProjects[i].title === project) {
-            console.log(localProjects[i]);
-            let todoList = localProjects[i]["todoList"];
-
-            for(let prop in todoList) {
-                if(todoList[prop].title === obj) {
-                    delete todoList[prop];
-
-                    return localProjects;
-                }
-            }
-        }
-    }
-}
-
-function deleteProject(project) {
-    let localProjects = getLocalStorageProjects();
-
-    for(let i = 0; localProjects.length > i; i++) {
-        if(localProjects[i].title === project) {
-            delete localProjects[i];
-
-            let filteredProjects = localProjects.filter(item => item);
-
-            localStorage.setItem('projects', JSON.stringify(filteredProjects));
-        }
-    }
-}
-
-function getLocalStorageProjects() {
-    return JSON.parse(localStorage.getItem('projects'));
+function getLocalStorageProjects () {
+  return JSON.parse(localStorage.getItem('projects'))
 }
 
 // get items from Local Storage
 //     let consoleRead = JSON.parse(localStorage.getItem('projects'));
 
 export {
-    Project,
-    createProjects,
-    createProject,
-    addTodoToProject,
-    deleteTodoItem,
-    searchForProject,
-    searchForTodoInProject,
-    getLocalStorageProjects,
-    deleteProject,
-    setTodayProjectItems,
-    setUpcomingProjectItems
+  Project,
+  createProjects,
+  createProject,
+  addTodoToProject,
+  deleteTodoItem,
+  searchForProject,
+  searchForTodoInProject,
+  getLocalStorageProjects,
+  deleteProject,
+  setTodayProjectItems,
+  setUpcomingProjectItems
 }
