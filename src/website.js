@@ -29,7 +29,7 @@ function firstTimeInitialization() {
     const today = new Project('today');
     const upcoming = new Project('upcoming');
 
-    const date = format(new Date(2022, 6, 25), 'yyyy-MM-dd');
+    const date = format(new Date(), 'yyyy-MM-dd');
 
     const firstProject = new Todo('Complete the Todo List Project', 'The Odin Project Todo Project!', date, 5, '');
 

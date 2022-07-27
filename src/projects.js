@@ -50,6 +50,7 @@ function setTodayProjectItems() {
                 for(let i = 0; value.length > i; i++) {
                     if(value[i].title === "today") {
                         value[i]["todoList"][`${item.title}`] = item;
+                        value[i]["todoList"][`${item.title}`]["todayProject"] = value[i].title;
                     }
                 }
                 localStorage.setItem('projects', JSON.stringify(value));
@@ -80,6 +81,7 @@ function setUpcomingProjectItems() {
 
                     if(item.dueDate === date) {
                         value[2]["todoList"][`${item.title}`] = item;
+                        value[2]["todoList"][`${item.title}`]["weeklyProject"] = value[i].title;
                     }
 
                     localStorage.setItem('projects', JSON.stringify(value));
@@ -172,9 +174,41 @@ function deleteTodoItem(obj, project) {
 
     for(let i = 0; localProjects.length > i; i++) {
         if(localProjects[i].title === project) {
-            delete localProjects[i]["todoList"][`${obj.title}`];
+            let todayProject = localProjects[i]["todoList"][`${obj.title}`]["todayProject"];
+            let weeklyProject = localProjects[i]["todoList"][`${obj.title}`]["weeklyProject"];
 
-            localStorage.setItem('projects', JSON.stringify(localProjects));
+            let projectsLocal = getLocalStorageProjects();
+
+            if(todayProject !== undefined) {
+                projectsLocal = deleteFromSpecialProjects("today", obj.title, projectsLocal);
+            }
+            if(weeklyProject !== undefined) {
+                projectsLocal = deleteFromSpecialProjects("upcoming", obj.title, projectsLocal);
+            }
+
+            delete projectsLocal[i]["todoList"][`${obj.title}`];
+
+            console.log(projectsLocal);
+
+            localStorage.setItem('projects', JSON.stringify(projectsLocal));
+        }
+    }
+}
+
+function deleteFromSpecialProjects(project, obj, localProjects) {
+
+    for(let i = 0; localProjects.length > i; i++) {
+        if(localProjects[i].title === project) {
+            console.log(localProjects[i]);
+            let todoList = localProjects[i]["todoList"];
+
+            for(let prop in todoList) {
+                if(todoList[prop].title === obj) {
+                    delete todoList[prop];
+
+                    return localProjects;
+                }
+            }
         }
     }
 }
